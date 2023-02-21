@@ -16,5 +16,23 @@ db = SQL("sqlite:///app.db")
 def index():
     return render_template("layout.html")
 
+
+@app.route("/rezeptHinzufügen", methods=["GET", "POST"])
+def rezeptHinzufügen():
+    if request.method == "POST":
+        name = request.form.get("name")
+        vorgehen = request.form.get("vorgehen")
+        anzahlZutaten = request.form.get("zutatCount")
+        zutaten = {}
+        for i in range(anzahlZutaten-1):
+            aktuelleZutat=request.form.get("zutat"+i)
+            aktuelleMenge=request.form.get("menge"+1)
+            zutaten[aktuelleZutat] = aktuelleMenge
+        return render_template("rezeptHinzufügen.html")
+    else:
+        return render_template("rezeptHinzufügen.html")
+
+    #TODO: Daten in sql übertragen, probeweise ausgeben!!
+
 if __name__ == '__main__':
     app.run()

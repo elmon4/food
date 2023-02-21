@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Rezept hinzufügen
+{% endblock %}
+
+{% block main %}
+
+    <form action="rezeptHinzufügen" method="post">
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="name"></textarea>
+            <label for="floatingTextarea">Rezeptname</label>
+        </div>
+        <div class="input-group">
+            <span class="input-group-text">Zutat und Menge in Gramm</span>
+            <input type="text" aria-label="Zutat" class="form-control" placeholder="Zutat" id="zutat0">
+            <input type="text" aria-label="Menge" class="form-control" placeholder="Menge in g" id="menge0">
+        </div>
+        <div id="form-container"></div>
+        <button id="weitereZutat" type="submit">weitere Zutat</button>
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Leave a comment here" id="vorgehen" style="height: 250px"></textarea>
+            <label for="floatingTextarea2">Vorgehen</label>
+          </div>
+        <input type="submit" value="Speichern">
+        <input type="hidden" name="zutatCount" id="zutatCount" value="">
+    </form>
+
+
+    <script>
+        const btn = document.getElementById("weitereZutat");
+        let count = 1;
+        btn.addEventListener("click", (event) => {
+            count++;
+            event.preventDefault();
+            const form = document.createElement("div");
+            form.className = "input-group";
+            const span = document.createElement("span");
+            span.className = "input-group-text";
+            const input1 = document.createElement("input");
+            input1.type = "text";
+            input1.setAttribute("aria-label", "Zutat");
+            input1.className = "form-control";
+            input1.placeholder = "Zutat";
+            input1.id = "zutat"+count;
+            console.log(input1.id);
+            const input2 = document.createElement("input");
+            input2.type = "text";
+            input2.setAttribute("aria-label", "Menge");
+            input2.className = "form-control";
+            input2.placeholder = "Menge in g";
+            input2.id = "menge"+count;
+
+            form.appendChild(span);
+            form.appendChild(input1);
+            form.appendChild(input2);
+
+            const container = document.getElementById("form-container");
+            container.appendChild(form);
+        })
+        
+        document.getElementById("zutatCount").value = count;
+    </script>
+
+{% endblock %}
