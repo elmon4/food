@@ -16,23 +16,46 @@ db = SQL("sqlite:///app.db")
 def index():
     return render_template("layout.html")
 
+@app.route("/rezepteAlphabetisch", methods=["GET"])
+def rezepteAlphabetisch():
+    if request.method == "GET":
+        #TODODDODOD
+        return render_template("rezeptHinzufügen.html")
+
 
 @app.route("/rezeptHinzufügen", methods=["GET", "POST"])
 def rezeptHinzufügen():
     if request.method == "POST":
+        portionen = request.form.get("portionen")
         name = request.form.get("name")
         vorgehen = request.form.get("vorgehen")
-        anzahlZutaten = request.form.get("zutatCount")
+        anzahlZutaten = int(request.form.get("zutatCount"))
+        saison = request.form.get("saison")
+        kategorie = request.form.get("kategorie")
         zutaten = {}
-        for i in range(anzahlZutaten-1):
-            aktuelleZutat=request.form.get("zutat"+i)
-            aktuelleMenge=request.form.get("menge"+1)
+        print(f"Anzahl Zutaten: {anzahlZutaten}")
+        for i in range(anzahlZutaten):
+            aktuelleZutat=request.form.get("zutat"+str(i))
+            aktuelleMenge=request.form.get("menge"+str(i))
             zutaten[aktuelleZutat] = aktuelleMenge
+        db.execute("INSERT INTO rezept (kategorie, name, portionen, saisonalität, vorgehen) VALUES (?, ?, ?, ?, ?)", kategorie, name, portionen, saison, vorgehen)
+        rezeptID = db.execute("SELECT id FROM rezept WHERE name = ?", name)[0]["id"]
+        for key in zutaten:
+            if key is not None:
+                aktuelleZutat = key
+                aktuelleMenge = zutaten[key]
+                result = db.execute("SELECT * FROM zutat WHERE name = ?", aktuelleZutat)
+                if len(result) == 0:
+                    db.execute("INSERT INTO zutat (name) VALUES(?)", aktuelleZutat)
+                zutatID = db.execute("SELECT id FROM zutat WHERE name = ?", aktuelleZutat)[0]["id"]
+                db.execute("INSERT INTO zutatInRezept(rezeptID, zutatID, menge) VALUES(?,?,?)", rezeptID, zutatID, aktuelleMenge)
         return render_template("rezeptHinzufügen.html")
     else:
         return render_template("rezeptHinzufügen.html")
 
     #TODO: Daten in sql übertragen, probeweise ausgeben!!
+    #TODO: rezepte Anzeigen lassen inkl. Zutaten, checken was falsch läuft in der Datenbank
+
 
 if __name__ == '__main__':
     app.run()

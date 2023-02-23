@@ -8,29 +8,49 @@
 
     <form action="rezeptHinzufügen" method="post">
         <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="name"></textarea>
+            <textarea class="form-control" placeholder="Leave a comment here" name="name"></textarea>
             <label for="floatingTextarea">Rezeptname</label>
+        </div>
+        <select class="form-select" name="saison" aria-label="Default select example">
+            <option selected>Saisonalität</option>
+            <option value="1">Frühling</option>
+            <option value="2">Sommer</option>
+            <option value="3">Herbst</option>
+            <option value="4">Winter</option>
+            <option value="5">keine Saisonalität</option>
+        </select>
+        <select class="form-select" name="kategorie" aria-label="Default select example">
+            <option selected>Kategorie</option>
+            <option value="1">Vorspeise</option>
+            <option value="2">Hauptgericht</option>
+            <option value="3">Dessert</option>
+            <option value="4">sonstiges</option>
+          </select>
+        <div class="form-floating">
+            <textarea class="form-control" placeholder="Anzahl Portionen" name="portionen"></textarea>
+            <label for="floatingTextarea">Anzahl Portionen</label>
         </div>
         <div class="input-group">
             <span class="input-group-text">Zutat und Menge in Gramm</span>
-            <input type="text" aria-label="Zutat" class="form-control" placeholder="Zutat" id="zutat0">
-            <input type="text" aria-label="Menge" class="form-control" placeholder="Menge in g" id="menge0">
+            <input type="text" aria-label="Zutat" class="form-control" placeholder="Zutat" name="zutat0">
+            <input type="text" aria-label="Menge" class="form-control" placeholder="Menge in g" name="menge0">
         </div>
         <div id="form-container"></div>
         <button id="weitereZutat" type="submit">weitere Zutat</button>
         <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="vorgehen" style="height: 250px"></textarea>
+            <textarea class="form-control" placeholder="Leave a comment here" name="vorgehen" style="height: 250px"></textarea>
             <label for="floatingTextarea2">Vorgehen</label>
           </div>
         <input type="submit" value="Speichern">
-        <input type="hidden" name="zutatCount" id="zutatCount" value="">
+        <input type="hidden" name="zutatCount" id="zutatCount" value="1">
     </form>
 
 
     <script>
         const btn = document.getElementById("weitereZutat");
         let count = 1;
-        btn.addEventListener("click", (event) => {
+        btn.addEventListener("click", 
+        (event) => {
             count++;
             event.preventDefault();
             const form = document.createElement("div");
@@ -57,9 +77,10 @@
 
             const container = document.getElementById("form-container");
             container.appendChild(form);
+            document.getElementById("zutatCount").value = count;
         })
         
-        document.getElementById("zutatCount").value = count;
+        
     </script>
 
 {% endblock %}
